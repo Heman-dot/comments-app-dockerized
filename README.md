@@ -24,16 +24,18 @@ This project provides Docker resources to deploy a basic microservices-based com
    cd comments-app-dockerized
 
 2. Build and run the containers:
-
+```
 docker-compose up --build
+```
 
 3. Open your browser and visit:
-
+```
 http://localhost:3000
 (Port may vary depending on how CommentsInteractor is configured.)
+```
 
 4. 🧱 Project Structure
-
+```
 comments-app-dockerized/
 ├── docker-compose.yml
 ├── CommentsInteractor/
@@ -41,6 +43,7 @@ comments-app-dockerized/
 ├── CommentsEngine/
 │   └── Dockerfile
 └── README.md
+```
 
 ❗ Disclaimer
 This is a deployment-only project for a proof-of-concept application. The application logic is not production-ready, and no modifications were made to the original code.
