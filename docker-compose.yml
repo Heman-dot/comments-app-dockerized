@@ -1,0 +1,72 @@
+version: '3.8'
+
+x-defaults: &default-settings
+  restart: unless-stopped
+  deploy:
+    resources:
+      limits:
+        cpus: '2'
+        memory: 150M
+      reservations:
+        cpus: '1'
+        memory: 100M
+
+services:
+  redis:
+    <<: *default-settings
+    image: reg.undercloud.cri.epita.fr/docker/redis:7.2-alpine
+    container_name: redis
+    hostname: redis
+    networks:
+      - backend
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  commentsengine:
+    build: ./CommentsEngine
+    container_name: commentsengine
+    hostname: commentsengine
+    <<: *default-settings
+    environment:
+      - REDIS_ENDPOINT=redis:6379
+      - HOST=0.0.0.0
+      - PORT=8000
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - backend
+      - metrics-net
+    depends_on:
+      - redis
+
+  commentsinteractor:
+    build: ./CommentsInteractor
+    container_name: commentsinteractor
+    hostname: commentsinteractor
+    <<: *default-settings
+    environment:
+      - COMMENTS_ENGINE_ENDPOINT=commentsengine:8000
+      - HOST=0.0.0.0
+      - PORT=9000
+    ports:
+      - "80:9000"
+    networks:
+      - frontend
+      - metrics-net
+    depends_on:
+      - commentsengine
+networks:
+  frontend:
+  backend:
+  metrics-net:
+    name: metrics-net
+    driver: bridge
+
+volumes:
+  redis_data:

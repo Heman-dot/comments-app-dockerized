@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'commentsApps'
+    static_configs:
+      - targets:
+        - 'commentsengine:8000'
+        - 'commentsinteractor:9000'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
