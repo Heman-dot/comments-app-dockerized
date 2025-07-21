@@ -20,7 +20,7 @@ This project provides Docker resources to deploy a basic microservices-based com
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/comments-app-dockerized.git
+   git clone https://github.com/Heman-dot/comments-app-dockerized
    cd comments-app-dockerized
 
 2. Build and run the containers:
